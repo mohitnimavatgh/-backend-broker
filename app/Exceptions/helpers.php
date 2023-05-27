@@ -23,7 +23,6 @@ function sendOTP($no){
         $receiverNumber = '+91'.$no;
         $message = "This is testing from Otp";
     
-        // return $no;
     
         $account_sid = 'AC1646d9cef27b0bbada6df4653eef10a2';
         $auth_token = '9e7b677715845d2d6a82d71cb3ce40fe';
