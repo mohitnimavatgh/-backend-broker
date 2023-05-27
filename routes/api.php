@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\SalesMarketingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -39,4 +40,9 @@ Route::group(['prefix' => 'user','middleware' => ['auth:api','role:user']], func
 Route::group(['prefix' => 'seller','middleware' => ['auth:api','role:seller']], function () {
     Route::get('/userInfo', [AuthController::class, 'userInfo']);
     Route::get('/profile', [AuthController::class, 'profile']);
+});
+Route::group(['prefix' => 'sales-marketing'], function () {
+    Route::post('add', [SalesMarketingController::class, 'add']);
+    Route::get('delete/{id}', [SalesMarketingController::class, 'delete']);
+    Route::post('edit', [SalesMarketingController::class, 'edit']);
 });

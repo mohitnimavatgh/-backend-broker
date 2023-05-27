@@ -92,7 +92,7 @@ class AuthController extends Controller
             $accessToken = auth()->user()
                 ->createToken('authToken')->accessToken;
             $user = auth()->user();  
-            $role= $user->roles->pluck('name')->first();
+            $role= isset($user->roles) ? $user->roles->pluck('name')->first() : $user->role_name;
             $user_data=$user;                
             $user_data['role'] = $role; 
            
