@@ -41,7 +41,7 @@ Route::group(['prefix' => 'seller','middleware' => ['auth:api','role:seller']], 
     Route::get('/userInfo', [AuthController::class, 'userInfo']);
     Route::get('/profile', [AuthController::class, 'profile']);
 });
-Route::group(['prefix' => 'sales-marketing'], function () {
+Route::group(['prefix' => 'sales-marketing','middleware' => ['auth:api','role:seller']], function () {
     Route::post('add', [SalesMarketingController::class, 'add']);
     Route::get('delete/{id}', [SalesMarketingController::class, 'delete']);
     Route::post('edit', [SalesMarketingController::class, 'edit']);
