@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SalesMarketingRepository implements SalesMarketingInterfaces
 { 
+    public function list()
+    { 
+        return User::where('role_name', 'sales and marketing')->select('id','name','email','mobile_no','address','photo','created_at')->paginate(10);
+    }
     public function add($input)
     { 
         Mail::send(['text'=>'mail'], $input, function($message) use ($input) {

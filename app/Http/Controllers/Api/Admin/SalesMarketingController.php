@@ -15,6 +15,11 @@ class SalesMarketingController extends BaseController
         $this->SalesMarketingRepository = $SalesMarketingRepository;
     }
 
+    public function list(){
+        $data = $this->SalesMarketingRepository->list();
+        return $this->sendResponse($data, 'Sales & Marketing users list.');
+    }
+
     public function add(Request $request)
     {
         $validator = Validator::make($request->all() ,[
