@@ -3,13 +3,19 @@
 namespace App\Repositories\Admin;
 
 use App\Interfaces\Admin\SalesMarketingInterfaces;
-use App\Models\User; 
+use App\Models\User;  
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class SalesMarketingRepository implements SalesMarketingInterfaces
 { 
     public function add($input)
     { 
+        Mail::send(['text'=>'mail'], $input, function($message) use ($input) {
+            $message->to($input->email)->subject
+               ('sales and marketing');
+            $message->from(env('MAIL_FROM_ADDRESS'));
+         });
         return User::create([
             'name' => $input->name,
             'email' => $input->email,
