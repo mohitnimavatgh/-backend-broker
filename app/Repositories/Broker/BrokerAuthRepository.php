@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\User;
+namespace App\Repositories\Broker;
 
-use App\Interfaces\User\UserAuthInterface as UserAuthInterface;
+use App\Interfaces\Broker\BrokerAuthInterface as BrokerAuthInterface;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -10,21 +10,21 @@ use App\Models\UserDetails;
 use Twilio\Rest\Client;
 
 
-class UserAuthRepository implements UserAuthInterface
+class BrokerAuthRepository implements BrokerAuthInterface
 {
     public $user;
 
     function __construct(User $user) {
-	$this->user = $user;
+	    $this->user = $user;
     }
 
-    public function userRigster($request)
-    {  
+    public function brokerRigster($request)
+    {          
         $sendOtp = sendOTP($request->mobile_no);
         if($sendOtp){
             $user = User::create([      
                 'mobile_no' => $request->mobile_no,          
-                'role_name' => 'user',          
+                'role_name' => 'broker',          
             ]);
             User::where('mobile_no',$request->mobile_no)->update(['mobile_otp' => $sendOtp]);
             if($user){  
@@ -35,12 +35,11 @@ class UserAuthRepository implements UserAuthInterface
         }else{
             return sendResponse(false,404,'something went wrong',[]);
         }
-        
     }
 
-    public function userVerification($request)
+    public function brokerVerification($request)
     {
-        $user =  User::where('mobile_no',$request->mobile_no)->first();       
+        $user =  User::where('mobile_no',$request->mobile_no)->first(['id','mobile_otp','mobile_no']);       
         if($user->mobile_otp == $request->otp){
            User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
            return sendResponse(true,200,'verification successfully',$user);
@@ -48,7 +47,7 @@ class UserAuthRepository implements UserAuthInterface
         return sendResponse(false,422, 'Invalid OTP Code',[]);
     }
 
-    public function userDetails($request)
+    public function brokerDetails($request)
     {
         $user = User::find($request->user_id);
         
@@ -58,7 +57,7 @@ class UserAuthRepository implements UserAuthInterface
             }
             $photo_file = $request->file('photo');
             $filename = uniqid('photo_').time().'.'.$photo_file->getClientOriginalExtension();
-            $file_path = $request->file('photo')->storeAs('/public/images/user',$filename);
+            $file_path = $request->file('photo')->storeAs('/public/images/broker',$filename);
         }
 
         $user->name = $request->name;
@@ -73,7 +72,46 @@ class UserAuthRepository implements UserAuthInterface
         }
     }
 
-    public function userGetLoginPin($request)
+    public function brokerCertificatedDetailsForWork($request)
+    {
+        $getuserDetails = UserDetails::where('user_id',$request->user_id)->first();       
+        $file_path = '';
+        if ($request->has('certificate_photo')) {     
+            if($getuserDetails->certificate_photo != NULL && Storage::exists($getuserDetails->certificate_photo)){
+                Storage::delete($getuserDetails->certificate_photo);
+            }
+            $photo_file = $request->file('certificate_photo');
+            $filename = uniqid('certificate_photo_').time().'.'.$photo_file->getClientOriginalExtension();
+            $file_path = $request->file('certificate_photo')->storeAs('/public/images/user/certificateDoc',$filename);
+        }
+        
+        if(!$getuserDetails){
+            $userDetails = UserDetails::create([      
+                'user_id' => $request->user_id,          
+                'title' => $request->title,     
+                'description' => $request->description,     
+                'start_date' => $request->start_date,     
+                'end_date' => $request->end_date,     
+                'certificate_photo' => isset($file_path)?$file_path:NULL,     
+            ]);           
+        }else{
+            $getuserDetails->title = $request->title;     
+            $getuserDetails->description = $request->description;    
+            $getuserDetails->start_date = $request->start_date;   
+            $getuserDetails-> end_date = $request->end_date;  
+            $getuserDetails->certificate_photo = isset($file_path)?$file_path:$getuserDetails->certificate_photo;  
+            $getuserDetails->save();
+            $userDetails = $getuserDetails;
+        }
+
+        if($userDetails){
+            return sendResponse(true,200,'success',$userDetails);
+        }else{
+            return sendResponse(false,404, 'something went wrong',[]);
+        }
+    }
+
+    public function brokerGetLoginPin($request)
     {
         $user = User::where('id',$request->user_id)
                   ->update(['password' => Hash::make($request->password),
@@ -85,7 +123,7 @@ class UserAuthRepository implements UserAuthInterface
         }
     }
 
-    public function userlogin($request)
+    public function brokerlogin($request)
     {   
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         if (!auth()

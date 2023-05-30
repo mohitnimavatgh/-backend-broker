@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('aadhar_card_number')->unique();
+            $table->integer('aadhar_card_number')->unique()->nullable();
             $table->integer('aadhar_verified_at')->default(0);
             $table->string('pancard')->nullable();
             $table->string('title')->nullable();

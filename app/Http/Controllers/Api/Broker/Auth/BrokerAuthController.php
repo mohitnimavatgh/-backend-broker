@@ -1,43 +1,45 @@
 <?php
 
-namespace App\Http\Controllers\Api\User\Auth;
+namespace App\Http\Controllers\Api\Broker\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Http\Requests\User\CreateUserRequest;
-use App\Interfaces\User\UserAuthInterface;
 use Illuminate\Http\Request;
+use App\Http\Requests\Broker\CreateBrokerRequest;
+use App\Http\Requests\Broker\CertificatedDetailsForWorkRequest;
+use App\Http\Controllers\Api\BaseController as BaseController;
+use App\Interfaces\Broker\BrokerAuthInterface;
 use Validator;
 
-class UserAuthController extends BaseController
+class BrokerAuthController extends BaseController
 {
-    public function __construct(UserAuthInterface $userAuthRepository)
+    public function __construct(BrokerAuthInterface $brokerAuthRepository)
     {
-        $this->userAuth = $userAuthRepository;
+        $this->brokerAuth = $brokerAuthRepository;
     }
 
-    public function userRigster(Request $request)
+    public function brokerRigster(Request $request)
     {
        try {
-            $validator = Validator::make($request->all(),['mobile_no' => 'required|numeric|digits:10|unique:users']);
+            $validator = Validator::make($request->all(),
+            ['mobile_no' => 'required|numeric|digits:10|unique:users']);
 
             if ($validator->fails())
             {
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
-            }
-            
-            return $this->userAuth->userRigster($request);
+            }    
+
+            return $this->brokerAuth->brokerRigster($request);
 
        }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
        }
     }
 
-    public function userVerification(Request $request)
+    public function brokerVerification(Request $request)
     {
-        try {     
-            
+        try {   
+
             $validator = Validator::make($request->all(),[
                 'mobile_no' => 'required|numeric|digits:10',                
                 'otp' => 'required|numeric|digits:6',                
@@ -49,24 +51,31 @@ class UserAuthController extends BaseController
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
 
-            return $this->userAuth->userVerification($request);       
-        
+            return $this->brokerAuth->brokerVerification($request);
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
         }
     }
 
-    public function userDetails(CreateUserRequest $request)
+    public function brokerDetails(CreateBrokerRequest $request)
+    {        
+        try { 
+            return $this->brokerAuth->brokerDetails($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+        }
+    }
+
+    public function brokerCertificatedDetailsForWork(CertificatedDetailsForWorkRequest $request)
     {
         try { 
-            $data = $this->userAuth->userDetails($request);        
-            return $data;
+            return $this->brokerAuth->brokerCertificatedDetailsForWork($request);        
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
         }
     }
 
-    public function userGetLoginPin(Request $request)
+    public function brokerGetLoginPin(Request $request)
     {
         try { 
             $validator = Validator::make($request->all(),[
@@ -80,14 +89,14 @@ class UserAuthController extends BaseController
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
 
-            return $this->userAuth->userGetLoginPin($request);                   
+            return $this->brokerAuth->brokerGetLoginPin($request);                   
 
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
         }
     }
 
-    public function userlogin(Request $request)
+    public function brokerlogin(Request $request)
     {
         $validator = Validator::make($request->all() ,['email' => 'required', 'password' => 'required']);
 
@@ -96,6 +105,6 @@ class UserAuthController extends BaseController
             return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
         } 
 
-        return $this->userAuth->userlogin($request);
+        return $this->brokerAuth->brokerlogin($request);
     }
 }

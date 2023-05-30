@@ -20,25 +20,36 @@ function mailsend($email=null,$data=null){
 function sendOTP($no){
     try {
 
+        $otp = rand(100000,999999);
         $receiverNumber = '+91'.$no;
-        $message = "This is testing from Otp";
-    
+        $message = "Your OTP verification code is: ".$otp;    
     
         $account_sid = 'AC1646d9cef27b0bbada6df4653eef10a2';
-        $auth_token = '9e7b677715845d2d6a82d71cb3ce40fe';
+        $auth_token = 'faa6825634a5b46d0f94f5df951c2182';
         $twilio_number = '+13157137042';
         $twilio_verify_sid = 'VAb84e5fd30634edfc0c183f0c14af0bf0';
 
         $client = new Client($account_sid, $auth_token);
-        $client->verify->v2->services($twilio_verify_sid)
-            ->verifications
-            ->create($receiverNumber, "sms");
+        $client->messages->create($receiverNumber, [
+                'from' => $twilio_number, 
+                'body' => $message]);
 
-       return $client;
+       return $otp;
 
     } catch (Exception $e) {
-        return $e->getMessage();
+        return false;
     }
+}
+
+function sendResponse($status,$status_code,$message,$result)
+{ 
+    $response = [
+        'status' => $status,
+        'status_code' =>  $status_code,
+        'message' => $message,
+        'data'    => $result,
+    ];
+    return response()->json($response,$status_code);
 }
 
 ?>
