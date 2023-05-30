@@ -89,7 +89,7 @@ class UserAuthController extends BaseController
 
     public function userlogin(Request $request)
     {
-        $validator = Validator::make($request->all() ,['email' => 'required', 'password' => 'required']);
+        $validator = Validator::make($request->all() ,['email' => 'required|email', 'password' => 'required|digits:6']);
 
         if ($validator->fails())
         {

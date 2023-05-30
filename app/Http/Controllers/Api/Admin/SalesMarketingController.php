@@ -4,20 +4,19 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Interfaces\Admin\SalesMarketingInterfaces;
+use App\Interfaces\Admin\SalesMarketingInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class SalesMarketingController extends BaseController
 {
-    public function __construct(SalesMarketingInterfaces $SalesMarketingRepository)
+    public function __construct(SalesMarketingInterface $SalesMarketingRepository)
     {
         $this->SalesMarketingRepository = $SalesMarketingRepository;
     }
 
-    public function list(){
-        $data = $this->SalesMarketingRepository->list();
-        return $this->sendResponse($data, 'Sales & Marketing users list.');
+    public function list(Request $request){
+        return $this->SalesMarketingRepository->list($request);
     }
 
     public function add(Request $request)
@@ -33,16 +32,9 @@ class SalesMarketingController extends BaseController
             return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
         } 
 
-        $data = $this->SalesMarketingRepository->add($request);
-        unset($data['created_at']);
-        unset($data['updated_at']);
-        return $this->sendResponse($data, 'Sales & Marketing user add successfully.');
+        return $this->SalesMarketingRepository->add($request);
     }
-    public function delete($id)
-    {
-          $this->SalesMarketingRepository->delete($id);
-          return $this->sendResponse([], 'Sales & Marketing user delete successfully.');
-    }
+
     public function edit(Request $request)
     {
         $validator = Validator::make($request->all() ,[
@@ -56,7 +48,11 @@ class SalesMarketingController extends BaseController
             return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
         } 
 
-        $this->SalesMarketingRepository->edit($request);
-        return $this->sendResponse([], 'Sales & Marketing user update successfully.');
+        return $this->SalesMarketingRepository->edit($request);
+    }
+
+    public function delete($id)
+    {
+        return $this->SalesMarketingRepository->delete($id);
     }
 }

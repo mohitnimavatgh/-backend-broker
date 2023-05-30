@@ -2,11 +2,11 @@
 
 namespace App\Repositories\Admin;
 
-use App\Interfaces\Admin\AdminAuthInterfaces as AdminAuthInterfaces;
-use App\User;
+use App\Interfaces\Admin\AdminAuthInterface as AdminAuthInterface;
+use App\Models\User;
 
 
-class UserRepository implements UserInterface
+class AdminAuthRepository implements AdminAuthInterface
 {
     public $user;
 
@@ -15,21 +15,32 @@ class UserRepository implements UserInterface
 	$this->user = $user;
     }
 
-
-    public function getAll()
+    public function adminlogin($request)
     {
-        return $this->user->getAll();
-    }
+        $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        if (!auth()
+            ->attempt(array(
+            $fieldType => $request->email,
+            'password' => $request->password,
+            )))
+        {
+            return sendResponse(false,400,'Invalid Credentials',[]);
+        }
 
+        // if(!auth()->user()->email_verified_at){
+        //     Auth::logout();
+        //     return $this->sendResponse(false, 'message' => 'please verify your email address !'], 400);
+        // }
 
-    public function find($id)
-    {
-        return $this->user->findUser($id);
-    }
-
-
-    public function delete($id)
-    {
-        return $this->user->deleteUser($id);
-    }
+        $accessToken = auth()->user()
+            ->createToken('authToken')->accessToken;
+        $user = auth()->user(); 
+        $user['access_token'] = $accessToken; 
+       
+        if($user){
+            return sendResponse(true, 200,'Login successfully',$user);
+        }else{
+            return sendResponse(false,404, 'something went wrong',[]);
+        }
+    }   
 }

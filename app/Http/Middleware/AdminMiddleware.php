@@ -16,11 +16,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check() && auth()->user()->hasRole('admin')){
+        if(Auth::check() && auth()->user()->role_name == 'admin'){
             return $next($request);
          }
          else {           
-            return redirect()->route('login');
+            return response()
+                    ->json(['status' => false,'status_code'=> 401, 'message' => 'Unauthenticated'], 401);
          }
     }
 }
