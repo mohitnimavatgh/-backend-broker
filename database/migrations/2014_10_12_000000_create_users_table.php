@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('role_name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('mobile_no')->unique()->nullable();
-            $table->string('mobile_otp')->nullable();
+            $table->string('verified_otp')->nullable();
             $table->integer('mobile_verified_at')->default(0);
             $table->integer('email_verified_at')->default(0);
             $table->string('address')->nullable();

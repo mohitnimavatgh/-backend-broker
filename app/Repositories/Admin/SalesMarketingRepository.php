@@ -35,6 +35,7 @@ class SalesMarketingRepository implements SalesMarketingInterface
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'visible_password' => $request->password,
             'role_name' => 'sales and marketing',
         ]);
         if($salesMarketing){
@@ -69,14 +70,37 @@ class SalesMarketingRepository implements SalesMarketingInterface
         }
     }
 
-    public function passwordForgot($request){
+    public function passwordForgotForSendMail($request){
         $otp = rand(100000,999999);
         $data = 'sales and marketing User verify OTP :'.$otp;
         $email =  $request->email;
         $status = mailsend($email,$data);
         if($status){
+            User::where('email',$request->email)->update(['verified_otp' => $otp]);
             return sendResponse(true,200,'Mail Send successfully',[]);
         }
         return sendResponse(false,404, 'something went wrong',[]);
+    }
+
+    public function userVerification($request)
+    {
+        $user =  User::where('email',$request->email)->first();       
+        if($user->verified_otp == $request->otp){
+           User::where('email',$request->email)->update(['email_verified_at' => 1]);
+           return sendResponse(true,200,'verification successfully',$user);
+        } 
+        return sendResponse(false,422, 'Invalid OTP Code',[]);
+    }
+
+    public function passwordForgotSet($request){
+        $user=User::where(['id'=>$request->user_id])->first();
+        if(Hash::check($request->old_password, $user->password) && $user != ''){
+            $user->password=Hash::make($request->new_password);
+            $user->visible_password=$request->new_password;
+            $user->save();    
+            return sendResponse(true,200,'password change SuccessFully',$user);
+        }else{
+            return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
+        }
     }
 }

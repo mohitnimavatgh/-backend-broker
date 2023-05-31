@@ -29,7 +29,7 @@ class User extends Authenticatable
         'visible_password',
         'mobile_verified_at',
         'email_verified_at',
-        'mobile_otp',
+        'verified_otp',
         'updated_at',
         'created_at',
     ];

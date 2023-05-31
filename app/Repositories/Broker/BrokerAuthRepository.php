@@ -26,7 +26,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
                 'mobile_no' => $request->mobile_no,          
                 'role_name' => 'broker',          
             ]);
-            User::where('mobile_no',$request->mobile_no)->update(['mobile_otp' => $sendOtp]);
+            User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
             if($user){  
                 $user['otp'] = $sendOtp;
             }
@@ -39,8 +39,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
 
     public function brokerVerification($request)
     {
-        $user =  User::where('mobile_no',$request->mobile_no)->first(['id','mobile_otp','mobile_no']);       
-        if($user->mobile_otp == $request->otp){
+        $user =  User::where('mobile_no',$request->mobile_no)->first(['id','verified_otp','mobile_no']);       
+        if($user->verified_otp == $request->otp){
            User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
            return sendResponse(true,200,'verification successfully',$user);
         } 
@@ -157,7 +157,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
     public function brokerPasswordForgot($request){
         $sendOtp = sendOTP($request->mobile_no);
         if($sendOtp){
-           User::where('mobile_no',$request->mobile_no)->update(['mobile_otp' => $sendOtp]);
+           User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
            $user['otp'] = $sendOtp;
            return sendResponse(true,200,'send OTP successfully',$user);
         }else{

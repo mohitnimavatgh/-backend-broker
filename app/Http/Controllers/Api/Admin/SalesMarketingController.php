@@ -75,11 +75,12 @@ class SalesMarketingController extends BaseController
        }
     }
 
-    public function passwordForgot(Request $request)
+    // password Forgot For Send Mail
+    public function passwordForgotForSendMail(Request $request)
     {
-    //    try {
+       try {
             $validator = Validator::make($request->all(),
-            ['email' => 'required|email']);
+            ['email' => 'required|email|exists:users']);
 
             if ($validator->fails())
             {
@@ -87,10 +88,56 @@ class SalesMarketingController extends BaseController
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }    
 
-            return $this->SalesMarketingRepository->passwordForgot($request);
+            return $this->SalesMarketingRepository->passwordForgotForSendMail($request);
 
-    //    }catch (\Exception $e) {
-    //         return $this->sendError($e, $e->getMessage() , $e->getCode());
-    //    }
+       }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+     // creating a new User Verification function.   
+     public function userVerification(Request $request)
+     {
+         try {     
+             
+             $validator = Validator::make($request->all(),[
+                 'email' => 'required|email|exists:users',                
+                 'otp' => 'required|numeric|digits:6',                
+             ]);
+ 
+             if ($validator->fails())
+             {
+                 return response()
+                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+             }
+ 
+             return $this->SalesMarketingRepository->userVerification($request);       
+         
+         }catch (\Exception $e) {
+             return $this->sendError($e, $e->getMessage() , $e->getCode());
+         }
+     }
+
+    public function passwordForgotSet(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(),
+            [
+               'user_id' => 'required|numeric',
+               'old_password' => 'required|numeric|digits:6',
+               'new_password' => 'required|digits:6|different:old_password',
+               'confirmpassword'=>'required|same:new_password'
+            ]);
+
+            if ($validator->fails())
+            {
+                return response()
+                    ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+            }    
+            return $this->SalesMarketingRepository->passwordForgotSet($request);
+
+       }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
     }
 }

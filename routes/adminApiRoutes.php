@@ -18,7 +18,9 @@ use App\Http\Controllers\Api\Admin\SalesMarketingController;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/admin-login', [AdminAuthController::class, 'adminlogin']);
-    Route::post('passwordForgot-salesMarketing', [SalesMarketingController::class, 'passwordForgot']);
+    Route::get('salesMarketing-passwordForgotSendMail', [SalesMarketingController::class, 'passwordForgotForSendMail']);
+    Route::post('salesMarketing-forgotPasswordSet', [SalesMarketingController::class, 'passwordForgotSet']);
+    Route::get('salesMarketing-verification', [SalesMarketingController::class, 'userVerification']);
     Route::middleware(['auth:api','admin'])->group(function () {
         Route::get('list-salesMarketing', [SalesMarketingController::class, 'list']);
         Route::post('add-salesMarketing', [SalesMarketingController::class, 'add']);
