@@ -10,4 +10,6 @@ interface UserAuthInterface {
     public function userDetails($request);
     public function userGetLoginPin($request);
     public function userlogin($request);
+    public function userPasswordForgot($request);
+    public function userChangePassword($request);
 }

@@ -11,4 +11,6 @@ interface BrokerAuthInterface {
     public function brokerGetLoginPin($request);
     public function brokerCertificatedDetailsForWork($request);
     public function brokerlogin($request);
+    public function brokerPasswordForgot($request);
+    public function brokerChangePassword($request);
 }

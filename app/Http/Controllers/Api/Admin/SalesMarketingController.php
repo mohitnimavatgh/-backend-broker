@@ -15,44 +15,82 @@ class SalesMarketingController extends BaseController
         $this->SalesMarketingRepository = $SalesMarketingRepository;
     }
 
+    // get listing of sales
     public function list(Request $request){
-        return $this->SalesMarketingRepository->list($request);
+        try {
+            return $this->SalesMarketingRepository->list($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
     }
 
+    // create a new sales
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all() ,[
-            'email' => 'required|email|unique:users', 
-            'name' => 'required', 
-            'password' => 'required'
-        ]);
+        try {
+            $validator = Validator::make($request->all() ,[
+                'email' => 'required|email|unique:users', 
+                'name' => 'required', 
+                'password' => 'required|numeric|digits:6'
+            ]);
 
-        if ($validator->fails())
-        {
-            return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
-        } 
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            } 
 
-        return $this->SalesMarketingRepository->add($request);
+            return $this->SalesMarketingRepository->add($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
     }
 
+    // edit function of sales
     public function edit(Request $request)
     {
-        $validator = Validator::make($request->all() ,[
-            'id' => 'required|numeric|exists:users', 
-            'email' => 'required|email|unique:users,id,'.$request->id, 
-            'name' => 'required', 
-        ]);
+        try {
+            $validator = Validator::make($request->all() ,[
+                'id' => 'required|numeric|exists:users', 
+                'email' => 'required|email|unique:users,id,'.$request->id, 
+                'name' => 'required', 
+            ]);
 
-        if ($validator->fails())
-        {
-            return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
-        } 
-
-        return $this->SalesMarketingRepository->edit($request);
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            }
+            return $this->SalesMarketingRepository->edit($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
     }
 
+    // delete function of sales
     public function delete($id)
     {
-        return $this->SalesMarketingRepository->delete($id);
+        try {
+            return $this->SalesMarketingRepository->delete($id);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+    public function passwordForgot(Request $request)
+    {
+    //    try {
+            $validator = Validator::make($request->all(),
+            ['email' => 'required|email']);
+
+            if ($validator->fails())
+            {
+                return response()
+                    ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+            }    
+
+            return $this->SalesMarketingRepository->passwordForgot($request);
+
+    //    }catch (\Exception $e) {
+    //         return $this->sendError($e, $e->getMessage() , $e->getCode());
+    //    }
     }
 }

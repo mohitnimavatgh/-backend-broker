@@ -12,7 +12,7 @@ class AdminAuthRepository implements AdminAuthInterface
 
 
     function __construct(User $user) {
-	$this->user = $user;
+	    $this->user = $user;
     }
 
     public function adminlogin($request)
@@ -22,6 +22,7 @@ class AdminAuthRepository implements AdminAuthInterface
             ->attempt(array(
             $fieldType => $request->email,
             'password' => $request->password,
+            'role_name' => $request->role_name,
             )))
         {
             return sendResponse(false,400,'Invalid Credentials',[]);

@@ -16,6 +16,7 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        
         if(Auth::check() && auth()->user()->role_name == 'user'){
             return $next($request);
          }

@@ -15,7 +15,8 @@ class UserAuthController extends BaseController
     {
         $this->userAuth = $userAuthRepository;
     }
-
+   
+    // creating a new User.   
     public function userRigster(Request $request)
     {
        try {
@@ -34,6 +35,7 @@ class UserAuthController extends BaseController
        }
     }
 
+    // creating a new User Verification function.   
     public function userVerification(Request $request)
     {
         try {     
@@ -56,6 +58,7 @@ class UserAuthController extends BaseController
         }
     }
 
+    // Get User Details
     public function userDetails(CreateUserRequest $request)
     {
         try { 
@@ -66,6 +69,7 @@ class UserAuthController extends BaseController
         }
     }
 
+    // Get login Pin of user
     public function userGetLoginPin(Request $request)
     {
         try { 
@@ -87,6 +91,7 @@ class UserAuthController extends BaseController
         }
     }
 
+    // login function of user
     public function userlogin(Request $request)
     {
         $validator = Validator::make($request->all() ,['email' => 'required|email', 'password' => 'required|digits:6']);
@@ -97,5 +102,49 @@ class UserAuthController extends BaseController
         } 
 
         return $this->userAuth->userlogin($request);
+    }
+
+    //  password forgot for broker user
+    public function userPasswordForgot(Request $request)
+    {
+        try {
+             $validator = Validator::make($request->all(),
+             ['mobile_no' => 'required|numeric|digits:10|exists:users']);
+ 
+             if ($validator->fails())
+             {
+                 return response()
+                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+             }    
+ 
+             return $this->userAuth->userPasswordForgot($request);
+ 
+        }catch (\Exception $e) {
+             return $this->sendError($e, $e->getMessage() , $e->getCode());
+        }
+    }
+
+    //  change password for user
+    public function userChangePassword(Request $request)
+    {
+        try {
+             $validator = Validator::make($request->all(),
+             [
+                'user_id' => 'required|numeric',
+                'old_password' => 'required|numeric|digits:6',
+                'new_password' => 'required|digits:6|different:old_password',
+                'confirmpassword'=>'required|same:new_password'
+             ]);
+
+             if ($validator->fails())
+             {
+                 return response()
+                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+             }    
+             return $this->userAuth->userChangePassword($request);
+ 
+        }catch (\Exception $e) {
+             return $this->sendError($e, $e->getMessage() , $e->getCode());
+        }
     }
 }

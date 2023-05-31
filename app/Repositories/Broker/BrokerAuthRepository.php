@@ -130,6 +130,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
             ->attempt(array(
             $fieldType => $request->email,
             'password' => $request->password,
+            'role_name' => $request->role_name,
+            'mobile_verified_at' => 1,
             )))
         {
             return sendResponse(false,400,'Invalid Credentials',[]);
@@ -149,6 +151,29 @@ class BrokerAuthRepository implements BrokerAuthInterface
             return sendResponse(true, 200,'Login successfully',$user);
         }else{
             return sendResponse(false,404, 'something went wrong',[]);
+        }
+    }
+
+    public function brokerPasswordForgot($request){
+        $sendOtp = sendOTP($request->mobile_no);
+        if($sendOtp){
+           User::where('mobile_no',$request->mobile_no)->update(['mobile_otp' => $sendOtp]);
+           $user['otp'] = $sendOtp;
+           return sendResponse(true,200,'send OTP successfully',$user);
+        }else{
+            return sendResponse(false,404,'something went wrong',[]);
+        }
+    }
+
+    public function brokerChangePassword($request){      
+        $user=User::where(['id'=>$request->user_id])->first();
+        if(Hash::check($request->old_password, $user->password) && $user != ''){
+            $user->password=Hash::make($request->new_password);
+            $user->visible_password=$request->new_password;
+            $user->save();    
+            return sendResponse(true,200,'password change SuccessFully',$user);
+        }else{
+            return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
         }
     }
 }

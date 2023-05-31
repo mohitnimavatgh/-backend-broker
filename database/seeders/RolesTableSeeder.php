@@ -34,8 +34,8 @@ class RolesTableSeeder extends Seeder
             'name' => 'admin',
             'role_name' => 'admin',
             'email' => 'admin123@gmail.com',
-            'password' => Hash::make('admin123'),
-            'visible_password' => 'admin123'
+            'password' => Hash::make('123456'),
+            'visible_password' => '123456'
         ]);
         
     }

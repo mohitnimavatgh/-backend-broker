@@ -8,4 +8,5 @@ interface SalesMarketingInterface {
     public function add($request);
     public function edit($id);
     public function delete($id);
+    public function passwordForgot($request);
 }

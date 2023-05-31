@@ -16,15 +16,15 @@ class SalesMarketingRepository implements SalesMarketingInterface
 
     public function list($request)
     { 
-        if($request->id){
-            $salesMarketing = User::where('role_name', 'sales and marketing')->where('id',$request->id)->select('id','name','email','mobile_no','address','photo')->paginate(10);
+        if($request->user_id){ 
+            $salesMarketing = User::where('id',$request->user_id)->where('role_name','sales and marketing')->first();
         }else{
-            $salesMarketing = User::where('role_name', 'sales and marketing')->select('id','name','email','mobile_no','address','photo')->paginate(10);
-        }
+           $salesMarketing = User::where('role_name','sales and marketing')->select(['id','name','email','mobile_no','address','photo'])->paginate(10);
+        }        
         if($salesMarketing){
             return sendResponse(true,200,'Sales & Marketing users list',$salesMarketing);
         }else{
-            return sendResponse(false,404, 'Data Not Found',$salesMarketing);
+            return sendResponse(false,404, 'Data Not Found',[]);
         }
     }
 
@@ -41,11 +41,10 @@ class SalesMarketingRepository implements SalesMarketingInterface
             $data = 'sales and marketing';
             $email =  $request->email;
             $status = mailsend($email,$data);
-            return sendResponse(true,200,'Sales & Marketing user add successfully',[]);
+            return sendResponse(true,200,'Sales & Marketing user add successfully',$salesMarketing);
         }
         return sendResponse(false,404, 'something went wrong',[]);
     }
-
 
     public function edit($request)
     {
@@ -55,11 +54,10 @@ class SalesMarketingRepository implements SalesMarketingInterface
             'email' => isset($request->email) ? $request->email : $user->email,  
         ]);
         if($updateUser){
-            return sendResponse(true,200,'Sales & Marketing user update successfully',$updateUser);
+            return sendResponse(true,200,'Sales & Marketing user update successfully',$salesMarketing);
         }
         return sendResponse(false,404, 'something went wrong',[]);
     }
-
 
     public function delete($id)
     {
@@ -69,5 +67,16 @@ class SalesMarketingRepository implements SalesMarketingInterface
         }else{
             return sendResponse(false,404, 'something went wrong',[]);
         }
+    }
+
+    public function passwordForgot($request){
+        $otp = rand(100000,999999);
+        $data = 'sales and marketing User verify OTP :'.$otp;
+        $email =  $request->email;
+        $status = mailsend($email,$data);
+        if($status){
+            return sendResponse(true,200,'Mail Send successfully',[]);
+        }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 }
