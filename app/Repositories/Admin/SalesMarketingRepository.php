@@ -16,16 +16,13 @@ class SalesMarketingRepository implements SalesMarketingInterface
 
     public function list($request)
     { 
+        $salesMarketing = [];
         if($request->user_id){ 
             $salesMarketing = User::where('id',$request->user_id)->where('role_name','sales and marketing')->first();
         }else{
            $salesMarketing = User::where('role_name','sales and marketing')->select(['id','name','email','mobile_no','address','photo'])->paginate(10);
         }        
-        if($salesMarketing){
-            return sendResponse(true,200,'Sales & Marketing users list',$salesMarketing);
-        }else{
-            return sendResponse(false,404, 'Data Not Found',[]);
-        }
+        return sendResponse(true,200,'Sales & Marketing users list',$salesMarketing);        
     }
 
     public function add($request)
@@ -65,9 +62,8 @@ class SalesMarketingRepository implements SalesMarketingInterface
         $user = User::find($id);
         if($user->delete($id)){
             return sendResponse(true,200,'Sales & Marketing user delete successfully',[]);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function passwordForgotForSendMail($request){
@@ -99,8 +95,7 @@ class SalesMarketingRepository implements SalesMarketingInterface
             $user->visible_password=$request->new_password;
             $user->save();    
             return sendResponse(true,200,'password change SuccessFully',$user);
-        }else{
-            return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
         }
+        return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
     }
 }

@@ -29,9 +29,7 @@ class BrokerAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }    
-
             return $this->brokerAuth->brokerRigster($request);
-
        }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
        }
@@ -52,7 +50,6 @@ class BrokerAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
-
             return $this->brokerAuth->brokerVerification($request);
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
@@ -93,9 +90,7 @@ class BrokerAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
-
             return $this->brokerAuth->brokerGetLoginPin($request);                   
-
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
         }
@@ -110,7 +105,6 @@ class BrokerAuthController extends BaseController
         {
             return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
         } 
-
         return $this->brokerAuth->brokerlogin($request);
     }
 
@@ -126,7 +120,6 @@ class BrokerAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }    
-
             return $this->brokerAuth->brokerPasswordForgot($request);
 
        }catch (\Exception $e) {

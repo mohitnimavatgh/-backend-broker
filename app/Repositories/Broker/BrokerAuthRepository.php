@@ -32,9 +32,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
             }
            return sendResponse(true,200,'Register successfully',$user);
 
-        }else{
-            return sendResponse(false,404,'something went wrong',[]);
         }
+        return sendResponse(false,404,'something went wrong',[]);
     }
 
     public function brokerVerification($request)
@@ -67,9 +66,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
         $user->save();
         if($user){
             return sendResponse(true,200, 'Details save successfully.',$user);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function brokerCertificatedDetailsForWork($request)
@@ -106,9 +104,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
 
         if($userDetails){
             return sendResponse(true,200,'success',$userDetails);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function brokerGetLoginPin($request)
@@ -118,9 +115,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
                             'visible_password' => $request->password]);
         if($user){
             return sendResponse(true,200,'success',[]);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function brokerlogin($request)
@@ -149,9 +145,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
        
         if($user){
             return sendResponse(true, 200,'Login successfully',$user);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function brokerPasswordForgot($request){
@@ -160,9 +155,8 @@ class BrokerAuthRepository implements BrokerAuthInterface
            User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
            $user['otp'] = $sendOtp;
            return sendResponse(true,200,'send OTP successfully',$user);
-        }else{
-            return sendResponse(false,404,'something went wrong',[]);
         }
+        return sendResponse(false,404,'something went wrong',[]);
     }
 
     public function brokerChangePassword($request){      
@@ -172,8 +166,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
             $user->visible_password=$request->new_password;
             $user->save();    
             return sendResponse(true,200,'password change SuccessFully',$user);
-        }else{
-            return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
         }
+        return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
     }
 }

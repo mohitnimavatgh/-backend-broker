@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('visible_password')->nullable();
             $table->rememberToken()->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

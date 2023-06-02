@@ -27,7 +27,6 @@ class UserAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
-            
             return $this->userAuth->userRigster($request);
 
        }catch (\Exception $e) {
@@ -50,7 +49,6 @@ class UserAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
-
             return $this->userAuth->userVerification($request);       
         
         }catch (\Exception $e) {
@@ -83,7 +81,6 @@ class UserAuthController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }
-
             return $this->userAuth->userGetLoginPin($request);                   
 
         }catch (\Exception $e) {
@@ -100,7 +97,6 @@ class UserAuthController extends BaseController
         {
             return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
         } 
-
         return $this->userAuth->userlogin($request);
     }
 
@@ -116,7 +112,6 @@ class UserAuthController extends BaseController
                  return response()
                      ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
              }    
- 
              return $this->userAuth->userPasswordForgot($request);
  
         }catch (\Exception $e) {

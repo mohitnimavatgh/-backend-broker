@@ -3,23 +3,18 @@ use Twilio\Rest\Client;
 
 function mailsend($email=null,$data=null){
     try {
-
         Mail::send('auth.emails.emailVerificationEmail', ['data' => $data], function($message) use($email){
             $message->to($email);
             $message->subject('Email Verification Mail');
         });
-        
         return true;
-
       } catch (\Exception $e) {      
           return $e->getMessage();
       }
-    
 }
 
 function sendOTP($no){
     try {
-
         $otp = rand(100000,999999);
         $receiverNumber = '+91'.$no;
         $message = "Your OTP verification code is: ".$otp;    
@@ -33,9 +28,7 @@ function sendOTP($no){
         $client->messages->create($receiverNumber, [
                 'from' => $twilio_number, 
                 'body' => $message]);
-
        return $otp;
-
     } catch (Exception $e) {
         return false;
     }

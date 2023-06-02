@@ -38,7 +38,6 @@ class SalesMarketingController extends BaseController
             {
                 return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
             } 
-
             return $this->SalesMarketingRepository->add($request);
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
@@ -87,7 +86,6 @@ class SalesMarketingController extends BaseController
                 return response()
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }    
-
             return $this->SalesMarketingRepository->passwordForgotForSendMail($request);
 
        }catch (\Exception $e) {
@@ -110,7 +108,6 @@ class SalesMarketingController extends BaseController
                  return response()
                      ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
              }
- 
              return $this->SalesMarketingRepository->userVerification($request);       
          
          }catch (\Exception $e) {

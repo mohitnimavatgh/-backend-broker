@@ -40,8 +40,7 @@ class AdminAuthRepository implements AdminAuthInterface
        
         if($user){
             return sendResponse(true, 200,'Login successfully',$user);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }   
 }

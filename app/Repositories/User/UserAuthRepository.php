@@ -31,11 +31,8 @@ class UserAuthRepository implements UserAuthInterface
                 $user['otp'] = $sendOtp;
             }
            return sendResponse(true,200,'Register successfully',$user);
-
-        }else{
-            return sendResponse(false,404,'something went wrong',[]);
         }
-        
+        return sendResponse(false,404,'something went wrong',[]);
     }
 
     public function userVerification($request)
@@ -68,9 +65,8 @@ class UserAuthRepository implements UserAuthInterface
         $user->save();
         if($user){
             return sendResponse(true,200, 'Details save successfully.',$user);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function userGetLoginPin($request)
@@ -80,9 +76,8 @@ class UserAuthRepository implements UserAuthInterface
                             'visible_password' => $request->password]);
         if($user){
             return sendResponse(true,200,'success',[]);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function userlogin($request)
@@ -111,9 +106,8 @@ class UserAuthRepository implements UserAuthInterface
        
         if($user){
             return sendResponse(true, 200,'Login successfully',$user);
-        }else{
-            return sendResponse(false,404, 'something went wrong',[]);
         }
+        return sendResponse(false,404, 'something went wrong',[]);
     }
 
     public function userPasswordForgot($request){
@@ -122,9 +116,8 @@ class UserAuthRepository implements UserAuthInterface
            User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
            $user['otp'] = $sendOtp;
            return sendResponse(true,200,'send OTP successfully',$user);
-        }else{
-            return sendResponse(false,404,'something went wrong',[]);
         }
+        return sendResponse(false,404,'something went wrong',[]);
     }
 
     public function userChangePassword($request){      
@@ -134,8 +127,7 @@ class UserAuthRepository implements UserAuthInterface
             $user->visible_password=$request->new_password;
             $user->save();    
             return sendResponse(true,200,'password change SuccessFully',$user);
-        }else{
-            return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
         }
+        return sendResponse(false,404, ["currentpassword"=>['current password not match.']],[]);
     }
 }
