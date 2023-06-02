@@ -27,6 +27,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
                 'role_name' => 'broker',          
             ]);
             User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
+            $user['otp'] = '';
             if($user){  
                 $user['otp'] = $sendOtp;
             }

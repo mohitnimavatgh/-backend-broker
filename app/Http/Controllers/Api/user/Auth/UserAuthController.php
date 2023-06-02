@@ -30,7 +30,7 @@ class UserAuthController extends BaseController
             return $this->userAuth->userRigster($request);
 
        }catch (\Exception $e) {
-            return $this->sendError($e, $e->getMessage() , $e->getCode());
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
        }
     }
 
@@ -52,7 +52,7 @@ class UserAuthController extends BaseController
             return $this->userAuth->userVerification($request);       
         
         }catch (\Exception $e) {
-            return $this->sendError($e, $e->getMessage() , $e->getCode());
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
     }
 
@@ -60,10 +60,9 @@ class UserAuthController extends BaseController
     public function userDetails(CreateUserRequest $request)
     {
         try { 
-            $data = $this->userAuth->userDetails($request);        
-            return $data;
+            return $this->userAuth->userDetails($request);        
         }catch (\Exception $e) {
-            return $this->sendError($e, $e->getMessage() , $e->getCode());
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
     }
 
@@ -84,20 +83,24 @@ class UserAuthController extends BaseController
             return $this->userAuth->userGetLoginPin($request);                   
 
         }catch (\Exception $e) {
-            return $this->sendError($e, $e->getMessage() , $e->getCode());
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
     }
 
     // login function of user
     public function userlogin(Request $request)
     {
-        $validator = Validator::make($request->all() ,['email' => 'required|email', 'password' => 'required|digits:6']);
+        try {
+            $validator = Validator::make($request->all() ,['email' => 'required|email', 'password' => 'required|digits:6']);
 
-        if ($validator->fails())
-        {
-            return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
-        } 
-        return $this->userAuth->userlogin($request);
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            } 
+            return $this->userAuth->userlogin($request);
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+       }
     }
 
     //  password forgot for broker user
@@ -115,7 +118,7 @@ class UserAuthController extends BaseController
              return $this->userAuth->userPasswordForgot($request);
  
         }catch (\Exception $e) {
-             return $this->sendError($e, $e->getMessage() , $e->getCode());
+             return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
     }
 
@@ -139,7 +142,7 @@ class UserAuthController extends BaseController
              return $this->userAuth->userChangePassword($request);
  
         }catch (\Exception $e) {
-             return $this->sendError($e, $e->getMessage() , $e->getCode());
+             return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
     }
 }
