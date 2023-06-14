@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Broker\Auth\BrokerAuthController;
 use App\Http\Controllers\Api\Broker\PlanController;
+use App\Http\Controllers\Api\Broker\BrokerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +27,11 @@ Route::group(['prefix'=>'broker'], function () {
     Route::post('/broker-passwordForgot', [BrokerAuthController::class, 'brokerPasswordForgot']);
     Route::middleware(['auth:api','broker'])->group(function () {
         Route::post('/broker-changePassword', [BrokerAuthController::class, 'brokerChangePassword']);
+        Route::get('/list', [BrokerController::class, 'brokerList']);
 
         //Plan Create Api
         Route::post('/plan/create/{id?}', [PlanController::class, 'planCreateOrUpdate']);
-        Route::get('/plan/list', [PlanController::class, 'planList']);
+        Route::get('/plan/list/{id?}', [PlanController::class, 'planList']);
         Route::get('/plan/get-plan/{id?}', [PlanController::class, 'getPlan']);
         Route::get('/plan/delete/{id}', [PlanController::class, 'planDelete']);
 

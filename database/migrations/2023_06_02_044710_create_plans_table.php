@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('plan_name')->nullable();
             $table->text('plan_details')->nullable();
             $table->float('plan_price', 8, 2)->default(0);
-            $table->string('plan_duration')->nullable(0);
+            $table->string('plan_duration')->nullable();
             $table->boolean('is_plan_free_trial')->default(false);
             $table->foreign('broker_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

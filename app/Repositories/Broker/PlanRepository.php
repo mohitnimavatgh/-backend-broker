@@ -2,14 +2,30 @@
 
 namespace App\Repositories\Broker;
 use App\Interfaces\Broker\PlanInterface as PlanInterface;
+use App\Repositories\Payment\StripePaymentRepository;
 use App\Models\UserDetails;
 use App\Models\Plans;
+use DB;
 use App\Models\PlanFeatures;
 
 class PlanRepository implements PlanInterface
 {
-    public function planList(){
-        $plan = Plans::with('planFeatures')->get();        
+    public function planList($request){
+        if($request->id){
+            $query = Plans::where('broker_id', $request->id);
+            if ($request->sortPlanPrice) {
+                $query->orderBy('plan_price', $request->sortPlanPrice);
+            }
+            if ($request->sortData) {
+                $query->orderBy('created_at', $request->sortData);
+            }
+            if ($request->sortPlanDuration) {
+                $query->orderBy('plan_duration', $request->sortPlanDuration);
+            }
+            $plan = $query->with('planFeatures')->paginate(10);
+        }else{
+            $plan = Plans::with('planFeatures')->paginate(10);
+        }
         if($plan){
             return sendResponse(true,200,'Plans List',$plan);
         }
@@ -44,6 +60,14 @@ class PlanRepository implements PlanInterface
                 'plan_price' => $request->plan_price,
                 'plan_duration' => $request->plan_duration,
                 'is_plan_free_trial' => $request->is_plan_free_trial,
+            ]);
+
+            $stripePaymentRepository = app(StripePaymentRepository::class);
+            $response =  $stripePaymentRepository->stripeAddPlan($request);
+            $resp = $response->getData();   
+            $plan->update([
+                'stripe_plan_id' => $resp->data->product->id,
+                'stripe_plan_price_id' => $resp->data->prices->id
             ]);
             $msg = 'Plan save successfully';
         }

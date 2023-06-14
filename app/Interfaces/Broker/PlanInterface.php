@@ -6,7 +6,7 @@ namespace App\Interfaces\Broker;
 interface PlanInterface {
 
     public function planCreateOrUpdate($request);
-    public function planList();
+    public function planList($request);
     public function getPlan($id);
     public function planDelete($id);
 

@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plan_features', function (Blueprint $table) {
+        Schema::create('user_plan_purchase', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('plan_id');
-            $table->text('plan_feature')->nullable();
+            $table->dateTime('expiry_date')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plan_features');
+        Schema::dropIfExists('user_plan_purchase');
     }
 };

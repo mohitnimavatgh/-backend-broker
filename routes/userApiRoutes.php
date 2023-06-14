@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\User\Auth\UserAuthController;
+use App\Http\Controllers\Api\User\PurchasePlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,5 +25,7 @@ Route::group(['prefix'=>'user'], function () {
     Route::post('/user-passwordForgot', [UserAuthController::class, 'userPasswordForgot']);
     Route::middleware(['auth:api','user'])->group(function () {
         Route::post('/user-changePassword', [UserAuthController::class, 'userChangePassword']);
+        Route::post('/plan-purchase', [PurchasePlanController::class, 'userPurchasePlan']);
+        Route::get('/get-userPurchasePlan/{id?}', [PurchasePlanController::class, 'getuserPurchasePlan']);
     });
 });

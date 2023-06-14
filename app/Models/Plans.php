@@ -18,6 +18,8 @@ class Plans extends Model
         'plan_price',
         'plan_duration',
         'is_plan_free_trial',
+        'stripe_plan_id',
+        'stripe_plan_price_id'
     ];
 
     public function planFeatures()
