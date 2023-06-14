@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col-xl-12 col-lg-12">
                                 <hr>
-                                    <button type="submit" class="btn btn-primary" id="card-button" data-secret="seti_1NIVvlSEmyiCNJGSIER5BlM9_secret_O4fGxy1baExtarBFATLRTLMQiQzgq4r">Purchase</button>
+                                    <button type="submit" class="btn btn-primary" id="card-button" data-secret="">Purchase</button>
                                 </div>
                             </div>
     
