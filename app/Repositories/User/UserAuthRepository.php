@@ -91,7 +91,7 @@ class UserAuthRepository implements UserAuthInterface
             'mobile_verified_at' => 1,
             )))
         {
-            return sendResponse(false,400,'Invalid Credentials',[]);
+            return sendResponse(false,401,'Invalid Credentials',[]);
         }
 
         // if(!auth()->user()->email_verified_at){

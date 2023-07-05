@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Interfaces\Admin\SalesMarketingInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 class SalesMarketingController extends BaseController
@@ -29,9 +30,9 @@ class SalesMarketingController extends BaseController
     {
         try {
             $validator = Validator::make($request->all() ,[
-                'email' => 'required|email|unique:users', 
+                'email' => ['required','email',$request->id?Rule::unique('users')->ignore($request->id):'unique:users'], 
                 'name' => 'required', 
-                'password' => 'required|numeric|digits:6'
+                'password' => $request->id?'':'required|numeric|digits:6'
             ]);
 
             if ($validator->fails())

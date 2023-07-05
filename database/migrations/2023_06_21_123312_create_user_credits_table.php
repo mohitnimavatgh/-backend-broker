@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_plan_purchase', function (Blueprint $table) {
+        Schema::create('user_credits', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('broker_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('plan_id');
-            $table->float('plan_price', 8, 2)->default(0);
-            $table->dateTime('expiry_date')->nullable();
+            $table->string('price')->nullable();
+            $table->string('rate_of_interest')->nullable();
+            $table->string('actual_price')->nullable();
+            $table->foreign('broker_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_plan_purchase');
+        Schema::dropIfExists('user_credits');
     }
 };

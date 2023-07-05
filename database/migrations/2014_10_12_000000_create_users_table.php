@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('role_name')->nullable();
+            $table->string('role_name')->comment('admin,broker,user,sales and marketing')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('mobile_no')->unique()->nullable();
             $table->string('verified_otp')->nullable();
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('password')->nullable();
             $table->string('visible_password')->nullable();
+            $table->float('user_credit', 20, 2)->default(0);
             $table->rememberToken()->nullable();
             $table->timestamps();
             $table->softDeletes();

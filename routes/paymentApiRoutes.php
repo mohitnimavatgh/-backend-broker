@@ -17,7 +17,14 @@ use App\Http\Controllers\Api\Payment\StripePaymentController;
 
 Route::group(['prefix'=>'user'], function () {
     Route::middleware(['auth:api','user'])->group(function () {
-        Route::post('/user-payment', [StripePaymentController::class, 'stripePayment']);
-        Route::post('/broker-addPlan', [StripePaymentController::class, 'stripeAddPlan']);
+        Route::post('/user-payment', [StripePaymentController::class, 'stripePayment']);     
+    });
+});
+
+Route::group(['prefix'=>'admin'], function () {
+    Route::middleware(['auth:api','admin'])->group(function () {
+        Route::post('/account-create', [StripePaymentController::class, 'stripeToBankAccountCreate']);
+        // Route::post('/account-create', [StripePaymentController::class, 'razorpayApiIntegration']);
+        Route::post('/money-transfer-bank', [StripePaymentController::class, 'stripeToBankTransferMoney']);
     });
 });

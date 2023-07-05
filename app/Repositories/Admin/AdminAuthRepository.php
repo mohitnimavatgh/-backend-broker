@@ -25,7 +25,7 @@ class AdminAuthRepository implements AdminAuthInterface
             'role_name' => $request->role_name,
             )))
         {
-            return sendResponse(false,400,'Invalid Credentials',[]);
+            return sendResponse(false,401,'Invalid Credentials',[]);
         }
 
         // if(!auth()->user()->email_verified_at){
@@ -42,5 +42,5 @@ class AdminAuthRepository implements AdminAuthInterface
             return sendResponse(true, 200,'Login successfully',$user);
         }
         return sendResponse(false,404, 'something went wrong',[]);
-    }   
+    }
 }

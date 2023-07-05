@@ -6,6 +6,7 @@ use App\Interfaces\Admin\SalesMarketingInterface;
 use App\Models\User;  
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class SalesMarketingRepository implements SalesMarketingInterface
 { 
@@ -27,19 +28,30 @@ class SalesMarketingRepository implements SalesMarketingInterface
 
     public function add($request)
     { 
-         
-        $salesMarketing =  User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'visible_password' => $request->password,
-            'role_name' => 'sales and marketing',
-        ]);
+        if(!isset($request->id)){
+            $token = Str::random(64);
+            $salesMarketing =  User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'visible_password' => $request->password,
+                'role_name' => 'sales and marketing',
+                'email_verified_at' => $token,
+            ]);
+            $msg = 'Sales & Marketing user add successfully';
+        }else{
+            $salesMarketing = User::find($request->id);
+            $salesMarketing_ =  $salesMarketing->update([
+                'name' => isset($request->name) ? $request->name : $user->name,
+                'email' => isset($request->email) ? $request->email : $user->email,  
+            ]);
+            $msg = 'Sales & Marketing user updated successfully';
+        }   
         if($salesMarketing){
             $data = 'sales and marketing';
             $email =  $request->email;
             $status = mailsend($email,$data);
-            return sendResponse(true,200,'Sales & Marketing user add successfully',$salesMarketing);
+            return sendResponse(true,200,$msg,$salesMarketing);
         }
         return sendResponse(false,404, 'something went wrong',[]);
     }

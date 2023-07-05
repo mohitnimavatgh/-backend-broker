@@ -15,7 +15,7 @@ class PurchasePlanController extends Controller
     }
 
     public  function userPurchasePlan(Request $request){
-        try {
+        // try {
             $validator = Validator::make($request->all(),
             [
                'user_id' => 'required',
@@ -28,9 +28,9 @@ class PurchasePlanController extends Controller
                     ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
             }    
             return $this->purchasePlan->userPurchasePlan($request);
-        }catch (\Exception $e) {
-            return $this->sendError($e, $e->getMessage() , $e->getCode());
-        }
+        // }catch (\Exception $e) {
+        //     return $this->sendError($e, $e->getMessage() , $e->getCode());
+        // }
     }
 
     public  function getuserPurchasePlan(Request $request){

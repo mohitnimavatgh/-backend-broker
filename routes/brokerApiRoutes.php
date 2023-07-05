@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Broker\Auth\BrokerAuthController;
+use App\Http\Controllers\Api\Payment\StripePaymentController;
 use App\Http\Controllers\Api\Broker\PlanController;
 use App\Http\Controllers\Api\Broker\BrokerController;
 
@@ -30,15 +31,23 @@ Route::group(['prefix'=>'broker'], function () {
         Route::get('/list', [BrokerController::class, 'brokerList']);
 
         //Plan Create Api
-        Route::post('/plan/create/{id?}', [PlanController::class, 'planCreateOrUpdate']);
-        Route::get('/plan/list/{id?}', [PlanController::class, 'planList']);
-        Route::get('/plan/get-plan/{id?}', [PlanController::class, 'getPlan']);
-        Route::get('/plan/delete/{id}', [PlanController::class, 'planDelete']);
+        Route::group(['prefix'=>'plan'], function () {
+            Route::post('/create/{id?}', [PlanController::class, 'planCreateOrUpdate']);
+            Route::get('/list/{id?}', [PlanController::class, 'planList']);
+            Route::get('/get-plan/{id?}', [PlanController::class, 'getPlan']);
+            Route::get('/delete/{id}', [PlanController::class, 'planDelete']);
+        });
 
         //Plan Features Create Api
-        Route::post('/planFeatures/create/{id?}', [PlanController::class, 'planFeaturesCreateOrUpdate']);
-        Route::get('/planFeatures/list', [PlanController::class, 'planFeaturesList']);
-        Route::get('/planFeatures/get-plan/{id?}', [PlanController::class, 'getPlanFeatures']);
-        Route::get('/planFeatures/delete/{id}', [PlanController::class, 'planFeaturesDelete']);
+        Route::group(['prefix'=>'planFeatures'], function () {
+            Route::post('/create/{id?}', [PlanController::class, 'planFeaturesCreateOrUpdate']);
+            Route::get('/list', [PlanController::class, 'planFeaturesList']);
+            Route::get('/get-plan/{id?}', [PlanController::class, 'getPlanFeatures']);
+            Route::get('/delete/{id}', [PlanController::class, 'planFeaturesDelete']);
+        });
+
+        //Stripe Add Plan
+        Route::post('/broker-addPlan', [StripePaymentController::class, 'stripeAddPlan']);
+
     });
 });
