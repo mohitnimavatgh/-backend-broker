@@ -21,4 +21,31 @@ class AdminController extends Controller
             return $this->sendError($e, $e->getMessage() , $e->getCode());
        }
     }
+
+    public function getBrokerPlanList(Request $request)
+    {
+        try {
+            return $this->admin->getBrokerPlanList($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+    public function getPlanUser(Request $request)
+    {
+        try {
+            return $this->admin->getPlanUser($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+    public function planFeaturesList(Request $request)
+    {
+        try {
+            return $this->admin->planFeaturesList($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
 }

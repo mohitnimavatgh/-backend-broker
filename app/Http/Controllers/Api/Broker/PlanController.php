@@ -35,11 +35,11 @@ class PlanController extends Controller
 
     //For Plan Creaet OR Update 
     public function planCreateOrUpdate(PlanRequest $request){
-        // try { 
+        try { 
             return $this->plan->planCreateOrUpdate($request);        
-        // }catch (\Exception $e) {
-        //     return $this->sendError(false, $e->getMessage() , $e->getCode());
-        // }
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+        }
     }
 
     //For Plan Delete
@@ -51,20 +51,19 @@ class PlanController extends Controller
         }
     }
 
-
     //Get all the plan Features
-    public function planFeaturesList(){
-        try { 
-            return $this->plan->planFeaturesList();        
-        }catch (\Exception $e) {
-            return $this->sendError(false, $e->getMessage() , $e->getCode());
-        }
+    public function planFeaturesList(Request $request){
+        // try { 
+            return $this->plan->planFeaturesList($request);        
+        // }catch (\Exception $e) {
+        //     return $this->sendError(false, $e->getMessage() , $e->getCode());
+        // }
     }
 
     //Get the Plan Features
-    public function getPlanFeatures($id){
+    public function getPlanFeatures(Request $request){
         try { 
-            return $this->plan->getPlanFeatures($id);
+            return $this->plan->getPlanFeatures($request);
         }catch (\Exception $e) {
             return $this->sendError(false, $e->getMessage() , $e->getCode());
         }

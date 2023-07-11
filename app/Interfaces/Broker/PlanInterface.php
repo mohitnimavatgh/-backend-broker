@@ -11,7 +11,7 @@ interface PlanInterface {
     public function planDelete($id);
 
     public function planFeaturesCreateOrUpdate($request);
-    public function planFeaturesList();
-    public function getPlanFeatures($id);
+    public function planFeaturesList($request);
+    public function getPlanFeatures($request);
     public function planFeaturesDelete($id);
 }

@@ -20,4 +20,12 @@ class BrokerController extends Controller
         //     return $this->sendError(false, $e->getMessage() , $e->getCode());
         // }
     }
+
+    public function subscribeUser(Request $request){
+        // try { 
+            return $this->broker->subscribeUser($request);        
+        // }catch (\Exception $e) {
+        //     return $this->sendError(false, $e->getMessage() , $e->getCode());
+        // }
+    }
 }

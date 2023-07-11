@@ -29,6 +29,7 @@ Route::group(['prefix'=>'broker'], function () {
     Route::middleware(['auth:api','broker'])->group(function () {
         Route::post('/broker-changePassword', [BrokerAuthController::class, 'brokerChangePassword']);
         Route::get('/list', [BrokerController::class, 'brokerList']);
+        Route::get('/subscribeUser/{id}', [BrokerController::class, 'subscribeUser']);
 
         //Plan Create Api
         Route::group(['prefix'=>'plan'], function () {
@@ -41,7 +42,7 @@ Route::group(['prefix'=>'broker'], function () {
         //Plan Features Create Api
         Route::group(['prefix'=>'planFeatures'], function () {
             Route::post('/create/{id?}', [PlanController::class, 'planFeaturesCreateOrUpdate']);
-            Route::get('/list', [PlanController::class, 'planFeaturesList']);
+            Route::get('/list/{plan_id?}', [PlanController::class, 'planFeaturesList']);
             Route::get('/get-plan/{id?}', [PlanController::class, 'getPlanFeatures']);
             Route::get('/delete/{id}', [PlanController::class, 'planFeaturesDelete']);
         });

@@ -22,9 +22,13 @@ class PlanRepository implements PlanInterface
             if ($request->sortPlanDuration) {
                 $query->orderBy('plan_duration', $request->sortPlanDuration);
             }
-            $plan = $query->with('planFeatures')->paginate(10);
+            if(strtoupper($request->item) == 'ALL'){
+                $plan = $query->get();
+            }else{
+                $plan = $query->with('planFeatures','broker')->paginate(10);
+            }
         }else{
-            $plan = Plans::with('planFeatures')->paginate(10);
+            $plan = Plans::with('planFeatures','broker')->paginate(10);
         }
         if($plan){
             return sendResponse(true,200,'Plans List',$plan);
@@ -85,16 +89,18 @@ class PlanRepository implements PlanInterface
         return sendResponse(false,404, 'something went wrong',[]);
     }
 
-    public function planFeaturesList(){
-        $planFeatures = PlanFeatures::all();
-        if($planFeatures){
-            return sendResponse(true,200,'Plan Features List',$planFeatures);
+    public function planFeaturesList($request){
+        $planFeatures = [];
+        if($request->plan_id){
+            $planFeatures = PlanFeatures::where('plan_id',$request->plan_id)->with(['plan:id,plan_name'])->paginate(10);
+        }else{
+            $planFeatures = PlanFeatures::with(['plan:id,plan_name'])->paginate(10);
         }
-        return sendResponse(false,404, 'something went wrong',[]);
+        return sendResponse(true,200,'Plan Features List',$planFeatures);
     }
 
-    public function getPlanFeatures($id){
-        $plan = PlanFeatures::find($id);
+    public function getPlanFeatures($request){
+       $plan = PlanFeatures::find($request->id);       
         if($plan){
             return sendResponse(true,200,'Get Plan Features',$plan);
         }

@@ -14,7 +14,7 @@ class RateOfInterestController extends Controller
         $this->rateOfInterest = $RateOfInterestInterface;
     }
 
-    public function RateOfInterestsCreateOrUpdate(Request $request){
+    public function RateOfInterestsCreate(Request $request){
         try {
             $validator = Validator::make($request->all() ,[
                 'rate_of_interest' => 'required',
@@ -24,9 +24,43 @@ class RateOfInterestController extends Controller
             {
                 return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
             } 
-            return $this->rateOfInterest->RateOfInterestsCreateOrUpdate($request);
+            return $this->rateOfInterest->RateOfInterestsCreate($request);
         }catch (\Exception $e) {
             return $this->sendError($e, $e->getMessage() , $e->getCode());
        }
     }
+
+    public function RateOfInterestsUpdate(Request $request){
+        try {
+            $validator = Validator::make($request->all() ,[
+                'id' => 'required',
+                'rate_of_interest' => 'required',
+            ]);
+
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            } 
+            return $this->rateOfInterest->RateOfInterestsUpdate($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+    public function RateOfInterestsList(Request $request){
+        try {
+            return $this->rateOfInterest->RateOfInterestsList($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+
+    public function RateOfInterestsDelete(Request $request){
+        try {
+            return $this->rateOfInterest->RateOfInterestsDelete($request);
+        }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
+    
 }

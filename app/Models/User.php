@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PurchasePlan::class,'user_id');
     }
+
+    public function brokerPlan()
+    {
+        return $this->hasMany(Plans::class,'broker_id');
+    }
 }

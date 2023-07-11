@@ -32,7 +32,7 @@ class SalesMarketingController extends BaseController
             $validator = Validator::make($request->all() ,[
                 'email' => ['required','email',$request->id?Rule::unique('users')->ignore($request->id):'unique:users'], 
                 'name' => 'required', 
-                'password' => $request->id?'':'required|numeric|digits:6'
+                'password' => $request->id?'':'required|between:6,8'
             ]);
 
             if ($validator->fails())

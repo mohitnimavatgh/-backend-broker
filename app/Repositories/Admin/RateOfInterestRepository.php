@@ -7,23 +7,47 @@ use App\Models\RateOfInterests;
 
 class RateOfInterestRepository implements RateOfInterestInterface
 { 
-    public function RateOfInterestsCreateOrUpdate($request)
+    public function RateOfInterestsCreate($request)
     { 
-        if($request->id){
-            $rateOfInterests = RateOfInterests::find($request->id);
-            $rateOfInterests->update([
-                'rate_of_interest' => $request->rate_of_interest,
-            ]);
-            $msg = 'Rate of interest update successfully';
-        }else{
-            $rateOfInterests =  RateOfInterests::create([
-                'rate_of_interest' => $request->rate_of_interest,
-            ]);
-            $msg = 'Rate of interest save successfully';
-        }
-        if($rateOfInterests){
-            return sendResponse(true,200,$msg,$rateOfInterests);
+        $rateOfInterestsAdd =  RateOfInterests::create([
+            'rate_of_interest' => $request->rate_of_interest,
+        ]);
+        if($rateOfInterestsAdd){
+            return sendResponse(true,200,'Rate of interest save successfully',$rateOfInterestsAdd);
         }
         return sendResponse(false,404, 'something went wrong',[]);
+    }
+
+    public function RateOfInterestsUpdate($request)
+    { 
+        $rateOfInterests = RateOfInterests::find($request->id);
+        $rateOfInterests->update([
+            'rate_of_interest' => $request->rate_of_interest,
+
+        ]);
+        if($rateOfInterests){
+            return sendResponse(true,200,'Rate of interest update successfully',$rateOfInterests);
+        }
+        return sendResponse(false,404, 'something went wrong',[]);
+    }
+
+    public function RateOfInterestsDelete($request)
+    { 
+        $rateOfInterests = RateOfInterests::find($request->id);
+        $rateOfInterests->delete();
+        if($rateOfInterests){
+            return sendResponse(true,200,'Rate of interest Deleted successfully',[]);
+        }
+        return sendResponse(false,404, 'something went wrong',[]);
+    }
+
+    public function RateOfInterestsList($request)
+    { 
+        if($request->id){
+            $rateOfInterestsData = RateOfInterests::where('id',$request->id)->get();
+        }else{
+            $rateOfInterestsData = RateOfInterests::all();
+        }
+        return sendResponse(true,200,'Rate of interest List',$rateOfInterestsData);
     }
 }

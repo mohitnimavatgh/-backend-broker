@@ -25,8 +25,17 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('salesMarketing-verification', [SalesMarketingController::class, 'userVerification']);
     Route::middleware(['auth:api','admin'])->group(function () {
 
-        Route::post('/create/{id?}', [RateOfInterestController::class, 'RateOfInterestsCreateOrUpdate']);
+        Route::group(['prefix' => 'rateOfInterest'], function () {
+            Route::get('/list/{id?}', [RateOfInterestController::class, 'RateOfInterestsList']);
+            Route::post('/create', [RateOfInterestController::class, 'RateOfInterestsCreate']);
+            Route::post('/edit', [RateOfInterestController::class, 'RateOfInterestsUpdate']);
+            Route::get('/delete/{id}', [RateOfInterestController::class, 'RateOfInterestsDelete']);
+        });
+
         Route::get('/get-userList/{role?}', [AdminController::class, 'getUserList']);
+        Route::get('/get-brokerPlanList/{broker_id?}', [AdminController::class, 'getBrokerPlanList']);
+        Route::get('/get-planUser/{plan_id}', [AdminController::class, 'getPlanUser']);
+        Route::get('/broker/plans/features/{plan_id}', [AdminController::class, 'planFeaturesList']);
 
         Route::group(['prefix' => 'salesMarketing'], function () {
             Route::get('/list', [SalesMarketingController::class, 'list']);

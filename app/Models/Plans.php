@@ -26,4 +26,9 @@ class Plans extends Model
     {
         return $this->hasMany(PlanFeatures::class,'plan_id');
     }
+
+    public function broker()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

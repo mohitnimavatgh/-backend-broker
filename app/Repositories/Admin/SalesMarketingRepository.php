@@ -47,7 +47,7 @@ class SalesMarketingRepository implements SalesMarketingInterface
             ]);
             $msg = 'Sales & Marketing user updated successfully';
         }   
-        if($salesMarketing){
+        if($salesMarketing){            
             $data = 'sales and marketing';
             $email =  $request->email;
             $status = mailsend($email,$data);
