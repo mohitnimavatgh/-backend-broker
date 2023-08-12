@@ -11,6 +11,7 @@ class Plans extends Model
     use HasFactory,SoftDeletes;
 
     protected $hidden = ['created_at', 'updated_at','deleted_at'];
+    protected $appends = ['is_plan_subscribe'];
     protected $fillable = [
         'broker_id',
         'plan_name',
@@ -30,5 +31,10 @@ class Plans extends Model
     public function broker()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getIsPlanSubscribeAttribute(){
+        $is_subscribe = PurchasePlan::where('plan_id',$this->id)->first();
+        return $is_subscribe?true:false;
     }
 }

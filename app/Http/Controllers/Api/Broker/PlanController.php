@@ -15,6 +15,14 @@ class PlanController extends Controller
         $this->plan = $planInterface;
     }
 
+    public function allPlanLists(Request $request){
+    //    try { 
+            return $this->plan->allPlanLists($request);        
+    //    }catch (\Exception $e) {
+    //        return $this->sendError(false, $e->getMessage() , $e->getCode());
+    //    }
+    }
+
     //Get all the plans
     public function planList(Request $request){
         try { 
@@ -34,9 +42,24 @@ class PlanController extends Controller
     }
 
     //For Plan Creaet OR Update 
-    public function planCreateOrUpdate(PlanRequest $request){
+    public function planCreate(PlanRequest $request){
         try { 
-            return $this->plan->planCreateOrUpdate($request);        
+            return $this->plan->planCreate($request);        
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+        }
+    }
+
+     //For Plan Creaet OR Update 
+     public function planUpdate(PlanRequest $request){
+        try { 
+            $validator = Validator::make($request->all() ,['id' => 'required']);
+
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            } 
+            return $this->plan->planUpdate($request);        
         }catch (\Exception $e) {
             return $this->sendError(false, $e->getMessage() , $e->getCode());
         }
@@ -69,8 +92,8 @@ class PlanController extends Controller
         }
     }
 
-    //For plan Features Creaet OR Update 
-    public function planFeaturesCreateOrUpdate(Request $request){
+    //For plan Features Creaet 
+    public function planFeaturesCreate(Request $request){
         try { 
             $validator = Validator::make($request->all() ,['plan_id' => 'required', 'plan_feature' => 'required']);
 
@@ -78,7 +101,22 @@ class PlanController extends Controller
             {
                 return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
             } 
-            return $this->plan->planFeaturesCreateOrUpdate($request);        
+            return $this->plan->planFeaturesCreate($request);        
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+        }
+    }
+
+    //For plan Features Update
+    public function planFeaturesUpdate(Request $request){
+        try { 
+            $validator = Validator::make($request->all() ,['plan_id' => 'required','id' => 'required','plan_feature' => 'required']);
+
+            if ($validator->fails())
+            {
+                return response()->json(['status' => false, 'status_code' => 422, 'message' => $validator->errors() ], 422);
+            } 
+            return $this->plan->planFeaturesUpdate($request);        
         }catch (\Exception $e) {
             return $this->sendError(false, $e->getMessage() , $e->getCode());
         }

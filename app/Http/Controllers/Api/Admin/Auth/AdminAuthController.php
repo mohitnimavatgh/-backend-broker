@@ -28,4 +28,26 @@ class AdminAuthController extends Controller
             return $this->sendError($e, $e->getMessage() , $e->getCode());
        }
     }
+
+    public function adminChangePassword(Request $request){
+        try {
+            $validator = Validator::make($request->all(),
+            [
+               'user_id' => 'required|numeric',
+               'old_password' => 'required|numeric|digits:6',
+               'new_password' => 'required|digits:6|different:old_password',
+               'confirmpassword'=>'required|same:new_password'
+            ]);
+
+            if ($validator->fails())
+            {
+                return response()
+                    ->json(['status' => false,'status_code' => 422, 'message' => $validator->errors() ], 422);
+            }    
+            return $this->adminAuth->adminChangePassword($request);
+
+       }catch (\Exception $e) {
+            return $this->sendError($e, $e->getMessage() , $e->getCode());
+       }
+    }
 }

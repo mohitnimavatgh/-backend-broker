@@ -31,7 +31,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
             if($user){  
                 $user['otp'] = $sendOtp;
             }
-           return sendResponse(true,200,'Register successfully',$user);
+           return sendResponse(true,200,'OTP Send successfully',$user);
 
         }
         return sendResponse(false,404,'something went wrong',[]);
@@ -75,16 +75,20 @@ class BrokerAuthRepository implements BrokerAuthInterface
     {
         $getuserDetails = UserDetails::where('user_id',$request->user_id)->first();       
         $file_path = '';
-        if ($request->has('certificate_photo')) {     
-            if($getuserDetails->certificate_photo != NULL && Storage::exists($getuserDetails->certificate_photo)){
+        if ($request->has('certificate_photo')) { 
+             
+            if(isset($getuserDetails) && $getuserDetails->certificate_photo != NULL && Storage::exists($getuserDetails->certificate_photo)){
                 Storage::delete($getuserDetails->certificate_photo);
             }
+            
             $photo_file = $request->file('certificate_photo');
             $filename = uniqid('certificate_photo_').time().'.'.$photo_file->getClientOriginalExtension();
             $file_path = $request->file('certificate_photo')->storeAs('/public/images/user/certificateDoc',$filename);
+            
         }
         
-        if(!$getuserDetails){
+        if(!isset($getuserDetails)){
+            
             $userDetails = UserDetails::create([      
                 'user_id' => $request->user_id,          
                 'title' => $request->title,     

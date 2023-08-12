@@ -19,10 +19,10 @@ use App\Http\Controllers\Api\Broker\BrokerController;
 */
 
 Route::group(['prefix'=>'broker'], function () {
-    Route::post('/broker-mobile-rgisiter', [BrokerAuthController::class, 'brokerRigster']);
-    Route::post('/broker-verification', [BrokerAuthController::class, 'brokerVerification']);
+    Route::get('/broker-mobile-rgisiter', [BrokerAuthController::class, 'brokerRigster']);
+    Route::get('/broker-verification', [BrokerAuthController::class, 'brokerVerification']);
     Route::post('/broker-details', [BrokerAuthController::class, 'brokerDetails']);
-    Route::post('/broker-getpin', [BrokerAuthController::class, 'brokerGetLoginPin']);
+    Route::get('/broker-getpin', [BrokerAuthController::class, 'brokerGetLoginPin']);
     Route::post('/broker-certificatedDetails', [BrokerAuthController::class, 'brokerCertificatedDetailsForWork']);
     Route::post('/broker-login', [BrokerAuthController::class, 'brokerlogin']);
     Route::post('/broker-passwordForgot', [BrokerAuthController::class, 'brokerPasswordForgot']);
@@ -33,7 +33,8 @@ Route::group(['prefix'=>'broker'], function () {
 
         //Plan Create Api
         Route::group(['prefix'=>'plan'], function () {
-            Route::post('/create/{id?}', [PlanController::class, 'planCreateOrUpdate']);
+            Route::post('/create', [PlanController::class, 'planCreate']);
+            Route::post('/edit', [PlanController::class, 'planUpdate']);
             Route::get('/list/{id?}', [PlanController::class, 'planList']);
             Route::get('/get-plan/{id?}', [PlanController::class, 'getPlan']);
             Route::get('/delete/{id}', [PlanController::class, 'planDelete']);
@@ -41,8 +42,9 @@ Route::group(['prefix'=>'broker'], function () {
 
         //Plan Features Create Api
         Route::group(['prefix'=>'planFeatures'], function () {
-            Route::post('/create/{id?}', [PlanController::class, 'planFeaturesCreateOrUpdate']);
-            Route::get('/list/{plan_id?}', [PlanController::class, 'planFeaturesList']);
+            Route::post('/create', [PlanController::class, 'planFeaturesCreate']);
+            Route::post('/edit', [PlanController::class, 'planFeaturesUpdate']);
+            Route::get('/list/{broker_id?}/{plan_id?}', [PlanController::class, 'planFeaturesList']);
             Route::get('/get-plan/{id?}', [PlanController::class, 'getPlanFeatures']);
             Route::get('/delete/{id}', [PlanController::class, 'planFeaturesDelete']);
         });
