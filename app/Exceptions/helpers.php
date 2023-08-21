@@ -19,10 +19,10 @@ function sendOTP($no){
         $receiverNumber = '+91'.$no;
         $message = "Your OTP verification code is: ".$otp;    
     
-        $account_sid = env('TWILIO_ACCOUNT_SID'); 
-        $auth_token = env('TWILIO_AUTH_TOKEN');
-        $twilio_number = env('TWILIO_NUMBER');
-        $twilio_verify_sid = env('TWILIO_VERIFY_SID');
+        $account_sid = 'AC1646d9cef27b0bbada6df4653eef10a2'; 
+        $auth_token = 'ee004cad5df075227cd0fd55b4673ed6';
+        $twilio_number = '+13157137042';
+        $twilio_verify_sid = 'VAb84e5fd30634edfc0c183f0c14af0bf0';
 
         $client = new Client($account_sid, $auth_token);
         $client->messages->create($receiverNumber, [

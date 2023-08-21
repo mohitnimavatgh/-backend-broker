@@ -16,11 +16,11 @@ class PlanController extends Controller
     }
 
     public function allPlanLists(Request $request){
-    //    try { 
+       try { 
             return $this->plan->allPlanLists($request);        
-    //    }catch (\Exception $e) {
-    //        return $this->sendError(false, $e->getMessage() , $e->getCode());
-    //    }
+       }catch (\Exception $e) {
+           return $this->sendError(false, $e->getMessage() , $e->getCode());
+       }
     }
 
     //Get all the plans

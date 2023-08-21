@@ -19,7 +19,7 @@ class UserAuthController extends BaseController
     // creating a new User.   
     public function userRigster(Request $request)
     {
-       try {
+    //    try {
             $validator = Validator::make($request->all(),['mobile_no' => 'required|numeric|digits:10|unique:users']);
 
             if ($validator->fails())
@@ -29,9 +29,9 @@ class UserAuthController extends BaseController
             }
             return $this->userAuth->userRigster($request);
 
-       }catch (\Exception $e) {
-            return $this->sendError(false, $e->getMessage() , $e->getCode());
-       }
+    //    }catch (\Exception $e) {
+    //         return $this->sendError(false, $e->getMessage() , $e->getCode());
+    //    }
     }
 
     // creating a new User Verification function.   

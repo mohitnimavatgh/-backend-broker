@@ -14,18 +14,18 @@ class BrokerController extends Controller
     }
 
     public  function brokerList(Request $request){
-        // try { 
+        try { 
             return $this->broker->brokerList($request);        
-        // }catch (\Exception $e) {
-        //     return $this->sendError(false, $e->getMessage() , $e->getCode());
-        // }
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+        }
     }
 
     public function subscribeUser(Request $request){
-        // try { 
+        try { 
             return $this->broker->subscribeUser($request);        
-        // }catch (\Exception $e) {
-        //     return $this->sendError(false, $e->getMessage() , $e->getCode());
-        // }
+        }catch (\Exception $e) {
+            return $this->sendError(false, $e->getMessage() , $e->getCode());
+        }
     }
 }

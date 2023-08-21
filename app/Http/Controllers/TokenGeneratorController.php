@@ -9,7 +9,6 @@ class TokenGeneratorController extends Controller
 {
     public function indexAction(){
         $intent = auth()->user()->createSetupIntent();
-        print_r($intent);
     }
 
     public function subscription(Request $request)
