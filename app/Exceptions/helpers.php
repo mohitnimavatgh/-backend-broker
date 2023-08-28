@@ -20,7 +20,7 @@ function sendOTP($no){
         $message = "Your OTP verification code is: ".$otp;    
     
         $account_sid = 'AC1646d9cef27b0bbada6df4653eef10a2'; 
-        $auth_token = 'ee004cad5df075227cd0fd55b4673ed6';
+        $auth_token = 'd25d03b9d39e8b6f77a018ec99bee7a2';
         $twilio_number = '+13157137042';
         $twilio_verify_sid = 'VAb84e5fd30634edfc0c183f0c14af0bf0';
 
@@ -30,7 +30,7 @@ function sendOTP($no){
                 'body' => $message]);
        return $otp;
     } catch (Exception $e) {
-        return false;
+        return $e->code;
     }
 }
 

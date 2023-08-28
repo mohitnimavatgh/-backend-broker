@@ -34,7 +34,7 @@ class BrokerAuthRepository implements BrokerAuthInterface
            return sendResponse(true,200,'OTP Send successfully',$user);
 
         }
-        return sendResponse(false,404,'something went wrong',[]);
+        return sendResponse(false,$sendOtp,'something went wrong',[]);
     }
 
     public function brokerVerification($request)
