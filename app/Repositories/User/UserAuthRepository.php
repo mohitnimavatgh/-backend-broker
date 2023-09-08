@@ -13,35 +13,78 @@ use Twilio\Rest\Client;
 class UserAuthRepository implements UserAuthInterface
 {
     public $user;
+    public $app_developement;
 
     function __construct(User $user) {
-	$this->user = $user;
+        $this->user = $user;
+        $this->app_developement = env("APP_DEVELOPMENT");
     }
 
     public function userRigster($request)
     {  
-        $sendOtp = sendOTP($request->mobile_no);
-        if($sendOtp){
+        if($this->app_developement == true) { 
+            $user_otp = 000000;
             $user = User::create([      
                 'mobile_no' => $request->mobile_no,          
                 'role_name' => 'user',          
             ]);
-            User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $sendOtp]);
-            if($user){  
-                $user['otp'] = $sendOtp;
+            User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => true]);
+                $user['otp'] = '';
+                if($user){  
+                    $user['otp'] = true;
+                }
+            return sendResponse(true,200,'OTP Is 000000',$user);
+
+        } else {
+
+            $send_otp = sendOTP2Factor($request->mobile_no);
+            if($send_otp['status'] == true) {
+                $user = User::create([      
+                    'mobile_no' => $request->mobile_no,          
+                    'role_name' => 'user',          
+                ]);
+                User::where('mobile_no',$request->mobile_no)->update(['verified_otp' => $send_otp['status']]);
+                $user['otp'] = '';
+                if($user){  
+                    $user['otp'] = $send_otp['status'];
+                }
+                return sendResponse(true,200,'OTP Send successfully',$user);
             }
-           return sendResponse(true,200,'Register successfully',$user);
         }
         return sendResponse(false,404,'something went wrong',[]);
     }
 
+    // public function userVerification($request)
+    // {
+    //     $user =  User::where('mobile_no',$request->mobile_no)->first();       
+    //     if($user->verified_otp == $request->otp){
+    //        User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
+    //        return sendResponse(true,200,'verification successfully',$user);
+    //     } 
+    //     return sendResponse(false,422, 'Invalid OTP Code',[]);
+    // }
+
     public function userVerification($request)
     {
-        $user =  User::where('mobile_no',$request->mobile_no)->first();       
-        if($user->verified_otp == $request->otp){
-           User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
-           return sendResponse(true,200,'verification successfully',$user);
-        } 
+        $user =  User::where('mobile_no',$request->mobile_no)->first(['id','verified_otp','mobile_no']);
+        if($this->app_developement == true) {
+            $otp =  $request->otp;
+            $mobile_no = $request->mobile_no;
+            if($otp == 000000 || $otp == '000000') {
+                User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
+                return sendResponse(true,200,'verification successfully',$user);
+            }
+        } else {
+            $data = array(
+                "mobile_no" => $request->mobile_no,
+                "otp" => $request->otp,
+            );
+            $varify_otp = otpVerification($data);
+            if($varify_otp['status'] == true) {
+                User::where('mobile_no',$request->mobile_no)->update(['mobile_verified_at' => 1]);
+                return sendResponse(true,200,'verification successfully',$user);
+            }
+        }
         return sendResponse(false,422, 'Invalid OTP Code',[]);
     }
 

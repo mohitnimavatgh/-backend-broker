@@ -22,7 +22,7 @@ class BrokerAuthController extends BaseController
     {
        try {
             $validator = Validator::make($request->all(),
-            ['mobile_no' => 'required|numeric|digits:10|unique:users']);
+            ['mobile_no' => 'required|numeric|digits:10']);
 
             if ($validator->fails())
             {
@@ -44,7 +44,6 @@ class BrokerAuthController extends BaseController
                 'mobile_no' => 'required|numeric|digits:10',                
                 'otp' => 'required|numeric|digits:6',                
             ]);
-
             if ($validator->fails())
             {
                 return response()

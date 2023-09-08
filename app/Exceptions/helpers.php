@@ -13,6 +13,40 @@ function mailsend($email=null,$data=null){
       }
 }
 
+function curlFunction($data) {
+
+    $method = $data['method'];
+    $url = $data['url'];
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => $method,
+    ));
+    $response = curl_exec($curl);
+    if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+    curl_close($curl);
+    if (isset($error_msg)) {
+        $data=[];
+        $data['status']=false;
+        $data['message']=$error_msg;
+        return $data;
+    }else{
+    $result = json_decode($response);
+       $data=[];
+       $data['status']=true;
+       $data['result']=$result;
+       return $data;
+    }
+}
+
 function sendOTP($no){
     try {
         $otp = rand(100000,999999);
@@ -32,6 +66,30 @@ function sendOTP($no){
     } catch (Exception $e) {
         return $e->code;
     }
+}
+
+function sendOTP2Factor($mobile_no) {
+    $receiverNumber = '+91'.$mobile_no;
+    $otp = rand(100000,999999);
+    $otp_template_name = env('2Factor_otp_template_name');
+    $api_key = env('2FactorAPIKEY');
+    $data = [];
+    $data['method'] = "GET";
+    $data['url'] = "https://2factor.in/API/V1/$api_key/SMS/$receiverNumber/$otp/$otp_template_name";
+    $response = curlFunction($data);
+    return $response;
+}
+
+function otpVerification($payload) {
+    $mobile_no = $payload['mobile_no'];
+    $otp = $payload['otp'];
+    $receiverNumber = '+91'.$mobile_no;
+    $api_key = env('2FactorAPIKEY');
+    $data = [];
+    $data['method'] = "GET";
+    $data['url'] = "https://2factor.in/API/V1/$api_key/SMS/VERIFY3/$receiverNumber/$otp";
+    $response = curlFunction($data);
+    return $response;
 }
 
 function sendResponse($status,$status_code,$message,$result)
